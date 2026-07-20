@@ -69,7 +69,29 @@ function seedData() {
     { id: uid("c"), code: "0111HH", type: "admin", studentName: null, startDate: null, endDate: null, durationMonths: null, status: "active", deviceId: null, studentId: null }
   ];
 
-  return { teachers, videos, exams, codes, students: [], results: [], notifications: [] };
+  // 10 ready-to-use access codes — no personal data, no registration step.
+  // Each one logs straight into the student area on whichever device it's
+  // typed into, since it's baked into the code itself (not localStorage).
+  const students = [];
+  const readyCodes = ["XK4R9T", "QP7M2L", "B5H8NW", "ZT3K6Y", "R9F2QX", "M6J4PL", "H2W7TK", "L8N3RX", "K5Q9MZ", "T4X6HP"];
+  readyCodes.forEach((codeStr, i) => {
+    const student = {
+      id: uid("s"), name: `طالب ${i + 1}`, phone: null, parentPhone: null,
+      school: null, governorate: null, track: null, email: null,
+      codeId: null, deviceId: null, avatar: null, createdAt: todayISO(),
+      videosWatched: [], examsCompleted: []
+    };
+    const codeObj = {
+      id: uid("c"), code: codeStr, type: "student", studentName: student.name,
+      startDate: todayISO(), endDate: null, durationMonths: null,
+      status: "active", deviceId: null, studentId: student.id
+    };
+    student.codeId = codeObj.id;
+    students.push(student);
+    codes.push(codeObj);
+  });
+
+  return { teachers, videos, exams, codes, students, results: [], notifications: [] };
 }
 
 function todayISO() {
